@@ -51,7 +51,7 @@ public class UsersController {
     public String newUser(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getAllRoles());
-        return "createNew";
+        return "redirect:/admin";
     }
 
     @PostMapping(value = "admin/new")
