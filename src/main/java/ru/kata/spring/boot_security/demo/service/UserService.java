@@ -19,4 +19,6 @@ public interface UserService {
     User getById(long id);
 
     User getByName(String name) throws NotFoundException;
+    User getByEmail(String email) throws NotFoundException;
+
 }

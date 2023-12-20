@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final SuccessUserHandler successUserHandler;
@@ -27,14 +26,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/", "/user")
                 .hasAnyRole("ADMIN, USER")
                 .antMatchers("/**")
                 .hasAnyRole("ADMIN")
                 .and()
-                .formLogin() // Spring сам подставит свою логин форму
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
                 .successHandler(successUserHandler) // подключаем наш SuccessHandler для перенеправления по ролям
                 .permitAll()
                 .and()
