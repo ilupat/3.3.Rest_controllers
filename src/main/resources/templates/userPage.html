@@ -67,7 +67,9 @@
                                     <td th:text="${user.lastname}"></td>
                                     <td th:text="${user.age}"></td>
                                     <td th:text="${user.email}"></td>
-                                    <td th:text="${user.roles.toString().replace('[ROLE_', '').replace(']', '')}"></td>
+                                    <td><span th:each="roles : ${user.getRoles()}"
+                                              th:text="${#strings.replace(roles, 'ROLE_', '')} + ' '"></span>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
