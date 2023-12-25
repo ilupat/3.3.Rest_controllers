@@ -209,7 +209,7 @@
                                                                                         th:each="role : ${listRoles}"
                                                                                         th:value="${role.name}"
                                                                                         th:text="${#strings.replace(role.name, 'ROLE_', '')}"
-                                                                                        th:selected="${role.name} == ROLE_USER">>
+                                                                                        th:selected="${user.roles.contains(role)}">
                                                                                 </option>
                                                                             </select>
                                                                         </div>
@@ -403,8 +403,7 @@
                                                             <option
                                                                     th:each="role : ${listRoles}"
                                                                     th:value="${role.name}"
-                                                                    th:text="${#strings.replace(role.name, 'ROLE_', '')}"
-                                                                    th:selected="${role.name} == ROLE_USER">
+                                                                    th:text="${#strings.replace(role.name, 'ROLE_', '')}">
                                                             </option>
                                                         </select>
                                                     </div>
