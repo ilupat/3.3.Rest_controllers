@@ -97,30 +97,36 @@ function getCurrent() {
     })
 }
 
-$('#editUserModal').on('show.bs.modal', (e) => {
-    let userId = $(e.relatedTarget).data('user-id')
+$('#editUserModal').on('show.bs.modal', function (e) {
+    var userId = $(e.relatedTarget).data('user-id');
+    var modal = $(this);
 
     $.ajax({
-        url: '/admin/' + userId,
+        url: `/admin/${userId}`,
         type: 'GET',
-        dataType: 'json',
-    }).done((msg) => {
-        let user = JSON.parse(JSON.stringify(msg))
-        $.getJSON('admin/roles', function (editRole) {
-            $('#id').empty().val(user.id)
-            $('#editName').empty().val(user.username)
-            $('#editName2').empty().val(user.lastname)
-            $('#editAge').empty().val(user.age)
-            $('#editEmail').empty().val(user.email)
-            $('#editPassword').val('')
-            $('#editRoles').empty()
-            $.each(editRole, (i, role) => {
-                $('#editRoles').append($('<option>').text(role.name.replace('ROLE_', '')).attr('value', role.name))
-            })
-            $('#editRoles').val(user.roles)
-        })
+        dataType: 'json'
+    }).done(function (userData) {
+        modal.find('#id').val(userData.id);
+        modal.find('#editName').val(userData.username);
+        modal.find('#editName2').val(userData.lastname);
+        modal.find('#editAge').val(userData.age);
+        modal.find('#editEmail').val(userData.email);
+        modal.find('#editPassword').val('');
+
+        $.getJSON('admin/roles', function (roles) {
+            var rolesSelect = modal.find('#editRoles').empty();
+            roles.forEach(function (role) {
+                rolesSelect.append(new Option(role.name.replace('ROLE_', ''), role.name));
+            });
+            if (userData.roles) {
+                userData.roles.forEach(function (userRole) {
+                    rolesSelect.find(`option[value="${userRole.name}"]`).prop('selected', true);
+                });
+            }
+            rolesSelect.trigger('change');
+        });
     })
-})
+});
 
 $('#buttonEditSubmit').on('click', (e) => {
     e.preventDefault()
