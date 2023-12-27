@@ -1,23 +1,26 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 @NoArgsConstructor
-@Data
+@EqualsAndHashCode(of = {"email"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +45,17 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+    ;
+
+    public User(UserDTO userDTO) {
+        this.id = userDTO.getId();
+        this.username = userDTO.getUsername();
+        this.lastname = userDTO.getLastname();
+        this.age = userDTO.getAge();
+        this.password = userDTO.getPassword();
+        this.email = userDTO.getEmail();
+    }
 
     @Override
     public String getUsername() {
@@ -54,26 +67,31 @@ public class User implements UserDetails {
         return password;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

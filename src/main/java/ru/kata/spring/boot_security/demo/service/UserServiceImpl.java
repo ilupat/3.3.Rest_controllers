@@ -58,12 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(long id) {
-        User user = null;
-        Optional<User> opt = userRepository.findById(id);
-        if (opt.isPresent()) {
-            user = opt.get();
-        }
-        return user;
+        return userRepository.getById(id);
     }
 
     @Override
@@ -74,6 +69,7 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
     @Override
     public User getByEmail(String email) throws NotFoundException {
         User user = userRepository.findByEmail(email);
