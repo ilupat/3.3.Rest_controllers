@@ -125,7 +125,9 @@ $('#editUserModal').on('show.bs.modal', function (e) {
             }
             rolesSelect.trigger('change');
         });
-    })
+    }).fail(function () {
+        alert('Не удалось загрузить данные пользователя.');
+    });
 });
 
 $('#buttonEditSubmit').on('click', (e) => {
@@ -172,7 +174,7 @@ $('[href="#new"]').on('show.bs.tab', (e) => {
     })
 })
 $('#buttonNew').on('click', (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let newUser = {
         username: $('#name').val(),
         lastname: $('#name2').val(),
@@ -180,19 +182,16 @@ $('#buttonNew').on('click', (e) => {
         email: $('#email').val(),
         password: $('#password').val(),
         roleNames: $('#rolesNew').val(),
-    }
+    };
     let json = JSON.stringify(newUser);
-    console.log(json);
 
     $.ajax({
         url: '/admin',
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
         data: json,
-    })
-
-    getAllUsers(),
-        $('#testTab a[href="#usersTable"]').tab('show')
-    location.reload()
-})
+    }).done(function(response) {
+        $('#testTab a[href="#usersTable"]').tab('show');
+        location.reload()
+    });
+});
